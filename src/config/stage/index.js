@@ -1,5 +1,7 @@
 import adminConfig from './admin'
 import bookConfig from './book' // 引入图书管理路由文件
+import productConfig from './product' // 引入商品
+import productCategoryConfig from './product_category' // 引入商品分类
 import pluginsConfig from './plugins'
 import Utils from '@/lin/utils/util'
 
@@ -37,6 +39,8 @@ let homeRouter = [
   },
   bookConfig,
   adminConfig,
+  productConfig,
+  productCategoryConfig,
 ]
 
 const plugins = [...pluginsConfig]
