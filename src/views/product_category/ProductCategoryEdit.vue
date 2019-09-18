@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    <div class="title">新建图书</div>
+    <div class="title">
+      <span>修改分类</span>
+      <span class="back" @click="back">
+        <i class="iconfont icon-fanhui"></i> 返回
+      </span>
+    </div>
+    <el-divider></el-divider>
     <div class="wrap">
       <el-row>
         <el-col
@@ -13,6 +19,7 @@
             status-icon
             ref="form"
             label-width="100px"
+            v-loading="loading"
             @submit.native.prevent>
             <el-form-item label="书名" prop="title">
               <el-input size="medium" v-model="form.title" placeholder="请填写书名"></el-input>
@@ -27,12 +34,11 @@
               <el-input
                 size="medium"
                 type="textarea"
-                :autosize="{ minRows: 4, maxRows: 8}"
+                :rows="4"
                 placeholder="请输入简介"
                 v-model="form.summary">
               </el-input>
             </el-form-item>
-
             <el-form-item class="submit">
               <el-button type="primary" @click="submitForm('form')">保 存</el-button>
               <el-button @click="resetForm('form')">重 置</el-button>
@@ -49,8 +55,14 @@
 import book from '@/models/book'
 
 export default {
+  props: {
+    editBookID: {
+      type: Number,
+    },
+  },
   data() {
     return {
+      loading: false,
       form: {
         title: '',
         author: '',
@@ -59,27 +71,35 @@ export default {
       },
     }
   },
+  async mounted() {
+    this.loading = true
+    this.form = await book.getBook(this.editBookID)
+    this.loading = false
+  },
   methods: {
-    async submitForm(formName) {
-      try {
-        const res = await book.addBook(this.form)
-        if (res.error_code === 0) {
-          this.$message.success(`${res.msg}`)
-          this.resetForm(formName)
-        }
-      } catch (error) {
-        console.log(error)
+    async submitForm() {
+      const res = await book.editBook(this.editBookID, this.form)
+      if (res.error_code === 0) {
+        this.$message.success(`${res.msg}`)
+        this.$emit('editClose')
       }
     },
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
+    back() {
+      this.$emit('editClose')
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.el-divider--horizontal {
+  margin: 0
+}
+
 .container {
   .title {
     height: 59px;
@@ -88,7 +108,12 @@ export default {
     font-size: 16px;
     font-weight: 500;
     text-indent: 40px;
-    border-bottom: 1px solid #dae1ec;
+
+    .back {
+      float: right;
+      margin-right: 40px;
+      cursor: pointer;
+    }
   }
 
   .wrap {

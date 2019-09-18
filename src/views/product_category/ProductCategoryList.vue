@@ -25,7 +25,7 @@
 <script>
 import book from '@/models/book'
 import LinTable from '@/components/base/table/lin-table'
-import BookEdit from './ProductEdit'
+import BookEdit from './ProductCategoryEdit'
 
 export default {
   components: {
