@@ -3,7 +3,7 @@
     <!-- 列表页面 -->
     <div class="container" v-if="!showEdit">
       <div class="header">
-        <div class="title">图书列表</div>
+        <div class="title">分类列表</div>
       </div>
       <!-- 表格 -->
       <lin-table
@@ -23,18 +23,18 @@
 </template>
 
 <script>
-import book from '@/models/book'
+import productCategory from '@/models/product_category'
 import LinTable from '@/components/base/table/lin-table'
-import BookEdit from './ProductCategoryEdit'
+import ProductCategoryEdit from './ProductCategoryEdit'
 
 export default {
   components: {
     LinTable,
-    BookEdit,
+    ProductCategoryEdit,
   },
   data() {
     return {
-      tableColumn: [{ prop: 'title', label: '书名' }, { prop: 'author', label: '作者' }],
+      tableColumn: [{ prop: 'title', label: '分类名' }, { prop: 'parent_id', label: '父ID' }],
       tableData: [],
       operate: [],
       showEdit: false,
@@ -43,20 +43,20 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getBooks()
+    this.getCategorys()
     this.operate = [{ name: '编辑', func: 'handleEdit', type: 'primary' }, {
       name: '删除',
       func: 'handleDelete',
       type: 'danger',
-      auth: '删除图书',
+      auth: '删除分类',
     }]
     this.loading = false
   },
   methods: {
-    async getBooks() {
+    async getCategorys() {
       try {
-        const books = await book.getBooks()
-        this.tableData = books
+        const categorys = await productCategory.getProductCategorys()
+        this.tableData = categorys
       } catch (error) {
         if (error.error_code === 10020) {
           this.tableData = []
@@ -69,14 +69,14 @@ export default {
       this.editBookID = val.row.id
     },
     handleDelete(val) {
-      this.$confirm('此操作将永久删除该图书, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       }).then(async () => {
-        const res = await book.delectBook(val.row.id)
+        const res = await productCategory.delectProductCategory(val.row.id)
         if (res.error_code === 0) {
-          this.getBooks()
+          this.getCategorys()
           this.$message({
             type: 'success',
             message: `${res.msg}`,
@@ -89,7 +89,7 @@ export default {
     },
     editClose() {
       this.showEdit = false
-      this.getBooks()
+      this.getCategorys()
     },
   },
 }

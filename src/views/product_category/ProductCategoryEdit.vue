@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import book from '@/models/book'
+import productCategory from '@/models/product_category'
 
 export default {
   props: {
@@ -73,12 +73,12 @@ export default {
   },
   async mounted() {
     this.loading = true
-    this.form = await book.getBook(this.editBookID)
+    this.form = await productCategory.getProductCategory(this.editBookID)
     this.loading = false
   },
   methods: {
     async submitForm() {
-      const res = await book.editBook(this.editBookID, this.form)
+      const res = await productCategory.editBook(this.editBookID, this.form)
       if (res.error_code === 0) {
         this.$message.success(`${res.msg}`)
         this.$emit('editClose')

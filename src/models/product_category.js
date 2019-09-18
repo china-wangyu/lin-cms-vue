@@ -11,7 +11,7 @@ class ProductCategory {
   // constructor() {}
 
   // 类中的方法可以代表一个用户行为
-  async addBook(info) {
+  async addProductCategory(info) {
     const res = await post('v1/product_category/', info)
     return res
   }
@@ -19,23 +19,28 @@ class ProductCategory {
   // 在这里通过 async await 语法糖让代码同步执行
   // 1. await 一定要搭配 async 来使用
   // 2. await 后面跟的是一个 Promise 对象
-  async getBook(id) {
+  async getProductCategory(id) {
     const res = await get(`v1/product_category/${id}`)
     return res
   }
 
-  async editBook(id, info) {
+  async editProductCategory(id, info) {
     const res = await put(`v1/product_category/${id}`, info)
     return res
   }
 
-  async delectBook(id) {
+  async delectProductCategory(id) {
     const res = await _delete(`v1/product_category/${id}`)
     return res
   }
 
   async getProductCategorys() {
     const res = await get('v1/product_category')
+    res.push({
+      id: 0,
+      title: '顶级分类',
+    })
+    console.log(res)
     return res
   }
 }

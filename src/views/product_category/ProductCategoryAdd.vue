@@ -14,11 +14,11 @@
             ref="form"
             label-width="100px"
             @submit.native.prevent>
-            <el-form-item label="书名" prop="title">
-              <el-input size="medium" v-model="form.title" placeholder="请填写书名"></el-input>
+            <el-form-item label="分类" prop="title">
+              <el-input size="medium" v-model="form.title" placeholder="请填写分类"></el-input>
             </el-form-item>
             <el-form-item label="父级分类" prop="parent_id">
-              <el-select size="medium" filterable v-model="form.parent_id" placeholder="请选择分组">
+              <el-select size="medium" filterable v-model="form.parent_id" placeholder="请选择分类">
                 <el-option
                         v-for="item in productCategoryList"
                         :key="item.id"
@@ -54,12 +54,11 @@ export default {
   },
   methods: {
     async getProductCategory() {
-      console.log(12)
       this.productCategoryList = await ProductCategory.getProductCategorys()
     },
     async submitForm(formName) {
       try {
-        const res = await ProductCategory.addBook(this.form)
+        const res = await ProductCategory.addProductCategory(this.form)
         if (res.error_code === 0) {
           this.$message.success(`${res.msg}`)
           this.resetForm(formName)
